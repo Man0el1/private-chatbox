@@ -1,40 +1,46 @@
-import React, { useEffect, useState, useRef } from "react";
-import io from "socket.io-client";
-
-import './Main.css'
+import React, { useState, useRef } from "react";
 
 export default function Main() {
+  const [nameValue, setNameValue] = useState("");
+  const [passwordValue, setPasswordValue] = useState("");
+  const fallingBgRef = useRef(null);
 
-  const [messages, setMessages] = useState([]);
-  const [inputValue, setInputValue] = useState("");
-  const [socket, setSocket] = useState(null);
+  const enterChat = async (e) => {
+    e.preventDefault();
+    if (nameValue === "" || nameValue.length > 30 || passwordValue === "" || passwordValue.length > 100) return;
+    try {
+      let response = await fetch("http://localhost:8080/login", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({name: nameValue, password: passwordValue})
+      });
+      let data = await response.json();
 
-  useEffect(() => {
-    const newSocket = io("http://localhost:8080");
-    setSocket(newSocket);
+      if (!response.ok) {
+        console.log("Erro: ", data.message);
+        if (fallingBgRef.current) {
+          fallingBgRef.current.style.filter = "hue-rotate(-90deg) brightness(2)";
+          setTimeout(() => {
+            fallingBgRef.current.style.filter = "none";
+          }, 500);
+        }
+        return;
+      }
 
-    newSocket.on('message', (text) => {
-      setMessages(prev => [...prev, text]);
-    });
-
-    return () => newSocket.disconnect(); // cleanup
-  }, []);
-
-  const sendMessage = () => {
-    if (!socket) return;
-    socket.emit('message', inputValue);
-    setInputValue("");
+      localStorage.setItem("token", data.token);
+      window.location.href = "/chat";
+    } catch (e) {
+      console.error("Erro: ", e);
+    }
   };
-
-  return(
-    <div className="homePage">
-      <h1 className="title">pagina inicial</h1>
-      <input type="text" placeholder="Digite uma mensagem" onChange={(e) => setInputValue(e.target.value)}/>
-      <button className="button" onClick={sendMessage}>Enviar mensagem</button>
-      <ul className="messages">
-        {messages.map((msg, index) => (<li key={index}>{msg}</li>))}
-      </ul>
+  return (
+    <div className="min-h-screen bg-black flex items-center justify-center relative overflow-hidden">
+      <div className="falling-bg absolute inset-0" ref={fallingBgRef}></div>
+      <form onSubmit={enterChat} className="relative z-10 bg-black flex flex-col items-center border border-lime-custom p-6 rounded-lg shadow-[0_0_3px_#00ff00]">
+        <input type="text" placeholder="Nome" value={nameValue} onChange={(e) => setNameValue(e.target.value.slice(0,30))} className="bg-black border border-lime-custom text-lime-custom p-2 rounded-md mb-2 w-full max-w-xs outline-none focus:shadow-[0_0_5px_#00ff00]" />
+        <input type="text" placeholder="Senha" value={passwordValue} onChange={(e) => setPasswordValue(e.target.value.slice(0,100))} className="bg-black border border-lime-custom text-lime-custom p-2 rounded-md mb-2 w-full max-w-xs outline-none focus:shadow-[0_0_5px_#00ff00]" />
+        <input type="submit" value="Entrar" className="bg-black border border-lime-custom text-lime-custom rounded-md text-[1.2rem] p-2.5 mt-5 cursor-pointer hover:bg-lime-custom hover:text-black transition" />
+      </form>
     </div>
-  )
+  );
 }
-

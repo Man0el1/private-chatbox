@@ -5,6 +5,17 @@ export default function Main() {
   const [passwordValue, setPasswordValue] = useState("");
   const fallingBgRef = useRef(null);
 
+  const showRedBg = () => {
+    console.log("Erro: ", data.message);
+    if (fallingBgRef.current) {
+      fallingBgRef.current.style.filter = "hue-rotate(-90deg) brightness(2)";
+      setTimeout(() => {
+        fallingBgRef.current.style.filter = "none";
+      }, 500);
+    }
+    return;
+  }
+
   const enterChat = async (e) => {
     e.preventDefault();
     if (nameValue === "" || nameValue.length > 30 || passwordValue === "" || passwordValue.length > 100) return;
@@ -17,14 +28,7 @@ export default function Main() {
       let data = await response.json();
 
       if (!response.ok) {
-        console.log("Erro: ", data.message);
-        if (fallingBgRef.current) {
-          fallingBgRef.current.style.filter = "hue-rotate(-90deg) brightness(2)";
-          setTimeout(() => {
-            fallingBgRef.current.style.filter = "none";
-          }, 500);
-        }
-        return;
+        showRedBg();
       }
 
       localStorage.setItem("token", data.token);

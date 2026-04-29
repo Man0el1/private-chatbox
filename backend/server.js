@@ -13,6 +13,7 @@ app.use(routes);
 
 const server = http.createServer(app);
 const io = new Server(server, {
+  auth: {token: localStorage.getItem("token")},
   cors: { origin: "*" }
 });
 

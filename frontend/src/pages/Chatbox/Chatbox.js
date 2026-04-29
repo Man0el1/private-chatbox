@@ -20,6 +20,25 @@ export default function Main() {
     return () => newSocket.disconnect(); // cleanup
   }, []);
 
+  const checkToken = async () => {
+    if (!localStorage.getItem("token")) window.location.href = "/";
+
+    try {
+      let response = await fetch("http://localhost:8080/validate-token", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': 'Bearer ' + localStorage.getItem('token')
+        },
+        body: JSON.stringify({token: localStorage.getItem("token")})
+      });
+      let data = await response.json();
+    } catch (e) {
+      console.log ("Erro: ", e);
+      window.location.href = "/";
+    }
+  }
+
   const sendMessage = () => {
     if (!socket) return;
     socket.emit('message', inputValue);
@@ -27,10 +46,10 @@ export default function Main() {
   };
 
   return(
-    <div className="chatboxPage">
-      <h1 className="title">pagina inicial</h1>
-      <input type="text" placeholder="Digite uma mensagem" onChange={(e) => setInputValue(e.target.value)}/>
-      <button className="button" onClick={sendMessage}>Enviar mensagem</button>
+    <div className="min-h-screen bg-black flex items-center justify-center relative overflow-hidden">
+      <div className="falling-bg absolute inset-0" ref={fallingBgRef}></div>
+      <div className="relative z-10 bg-black flex flex-col items-center border border-lime-custom p-6 rounded-lg shadow-[0_0_3px_#00ff00]">
+      </div>
       <ul className="messages">
         {messages.map((msg, index) => (<li key={index}>{msg}</li>))}
       </ul>

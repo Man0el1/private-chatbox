@@ -4,9 +4,9 @@ const route = express.Router();
 //controllers
 
 import { allowAccess } from './controllers/loginController.js';
-
-//middlewares
+import { validateToken } from './controllers/chatboxController.js';
 
 route.post('/login', allowAccess);
+route.post('/validate-token', validateToken);
 
 export default route;

@@ -27,12 +27,13 @@ export default function Main() {
       });
       let data = await response.json();
 
+      //TODO OLHAR SE ISSO ESTA NA POSICAO CERTA
       if (!response.ok) {
         showRedBg();
       }
 
       localStorage.setItem("token", data.token);
-      window.location.href = "/chat";
+      window.location.href = "/chatbox";
     } catch (e) {
       console.error("Erro: ", e);
     }

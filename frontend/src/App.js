@@ -4,14 +4,14 @@ import Header from "./components/Header/Header.js"
 import Footer from "./components/Footer/Footer.js"
 
 import Main from "./pages/Main/Main.js";
-import Chat from "./pages/Chat/Chat.js";
+import Chatbox from "./pages/Chatbox/Chatbox.js";
 
 export default function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Main/>}/>
-        <Route path="/chat" element={<Chat/>}/>
+        <Route path="/chatbox" element={<Chatbox/>}/>
       </Routes>
     </Router>
   );

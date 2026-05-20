@@ -20,7 +20,7 @@ export default function Main() {
     e.preventDefault();
     if (nameValue === "" || nameValue.length > 30 || passwordValue === "" || passwordValue.length > 100) return;
     try {
-      let response = await fetch("http://localhost:8080/login", {
+      let response = await fetch("https://private-chatbox-production.up.railway.app/login", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({name: nameValue, password: passwordValue})

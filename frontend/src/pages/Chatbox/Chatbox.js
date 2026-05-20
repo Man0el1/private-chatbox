@@ -10,7 +10,7 @@ export default function Main() {
   useEffect(() => {
     checkToken();
 
-    const newSocket = io("http://localhost:8080", {
+    const newSocket = io("https://private-chatbox-production.up.railway.app/", {
       auth: {
         token: localStorage.getItem("token")
       }
@@ -33,7 +33,7 @@ export default function Main() {
         window.location.href = "/";
         return;
       }
-      let response = await fetch("http://localhost:8080/validate-token", {
+      let response = await fetch("https://private-chatbox-production.up.railway.app/validate-token", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

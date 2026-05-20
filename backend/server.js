@@ -49,13 +49,14 @@ io.on('connection', (socket) => {
   });
 });
 
+const PORT = process.env.PORT || 8080;
 (async () => {
   try {
     await sequelize.authenticate();
     console.log('Banco de dados conectado com sucesso');
 
-    server.listen(8080, () => {
-      console.log('Servidor rodando na porta 8080');
+    server.listen(PORT, () => {
+      console.log('Servidor rodando na porta ' + `${PORT}`);
     });
   } catch (error) {
     console.error('Erro ao conectar no banco:', error);

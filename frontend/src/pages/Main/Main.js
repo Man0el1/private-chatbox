@@ -6,7 +6,6 @@ export default function Main() {
   const fallingBgRef = useRef(null);
 
   const showRedBg = () => {
-    console.log("Erro: ", data.message);
     if (fallingBgRef.current) {
       fallingBgRef.current.style.filter = "hue-rotate(-90deg) brightness(2)";
       setTimeout(() => {

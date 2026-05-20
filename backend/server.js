@@ -8,16 +8,28 @@ import http from 'http';
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: "https://private-chatbox-m.vercel.app",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true
+}));
+
+app.options("*", cors());
+
 app.use(express.json());
 app.use(routes);
 
 const server = http.createServer(app);
+
 const io = new Server(server, {
-  cors: { origin: "*" }
+  cors: {
+    origin: "https://private-chatbox-m.vercel.app",
+    methods: ["GET", "POST"],
+    credentials: true
+  }
 });
 
-//middleware para autenticação do socket, io.use funciona parecido com o app.use do express
 io.use((socket, next) => {
   const token = socket.handshake.auth.token;
 
@@ -27,7 +39,7 @@ io.use((socket, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    socket.user = decoded
+    socket.user = decoded;
   } catch (e) {
     return next(new Error("Token inválido"));
   }
@@ -36,7 +48,7 @@ io.use((socket, next) => {
 });
 
 io.on('connection', (socket) => {
-  console.log('Usuario conectado: ' + `${socket.user.name}`);
+  console.log('Usuario conectado: ' + socket.user.name);
 
   socket.on('message', (type, text) => {
     if (type === 'normalText') {
@@ -50,14 +62,16 @@ io.on('connection', (socket) => {
 });
 
 const PORT = process.env.PORT || 8080;
+
 (async () => {
   try {
     await sequelize.authenticate();
     console.log('Banco de dados conectado com sucesso');
 
     server.listen(PORT, () => {
-      console.log('Servidor rodando na porta ' + `${PORT}`);
+      console.log(`Servidor rodando na porta ${PORT}`);
     });
+
   } catch (error) {
     console.error('Erro ao conectar no banco:', error);
   }

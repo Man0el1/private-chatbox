@@ -26,17 +26,12 @@ export default function Main() {
         body: JSON.stringify({name: nameValue, password: passwordValue})
       });
 
-      //TODO OLHAR SE ISSO ESTA NA POSICAO CERTA
-      if (!response.ok) {
-        showRedBg();
-      }
-
       let data = await response.json();
 
       localStorage.setItem("token", data.token);
       window.location.href = "/chatbox";
     } catch (e) {
-      console.error("Erro: ", e);
+      showRedBg();
     }
   };
   return (

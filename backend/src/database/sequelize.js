@@ -1,3 +1,6 @@
+console.log(process.env);
+console.log('DATABASE_URL =>', process.env.DATABASE_URL);
+
 import { Sequelize } from 'sequelize';
 
 const sequelize = new Sequelize(process.env.DATABASE_URL, {

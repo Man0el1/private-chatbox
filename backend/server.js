@@ -36,7 +36,7 @@ io.use((socket, next) => {
 });
 
 io.on('connection', (socket) => {
-  console.log('Usuario conectado');
+  console.log('Usuario conectado: ' + `${socket.user.name}`);
 
   socket.on('message', (type, text) => {
     if (type === 'normalText') {

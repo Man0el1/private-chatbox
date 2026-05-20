@@ -25,12 +25,13 @@ export default function Main() {
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({name: nameValue, password: passwordValue})
       });
-      let data = await response.json();
 
       //TODO OLHAR SE ISSO ESTA NA POSICAO CERTA
       if (!response.ok) {
         showRedBg();
       }
+
+      let data = await response.json();
 
       localStorage.setItem("token", data.token);
       window.location.href = "/chatbox";

@@ -28,9 +28,16 @@ export default function Main() {
 
       let data = await response.json();
 
+      if (!response.ok) {
+        console.log("Erro:", data.message);
+        showRedBg();
+        return;
+      }
+
       localStorage.setItem("token", data.token);
       window.location.href = "/chatbox";
     } catch (e) {
+      console.error("Erro: ", e);
       showRedBg();
     }
   };

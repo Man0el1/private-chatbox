@@ -1,6 +1,13 @@
 import { Sequelize } from 'sequelize';
-import config from '../../config/config.cjs';
 
-const sequelize = new Sequelize(config.development);
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
+  dialect: 'postgres',
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false
+    }
+  }
+});
 
 export default sequelize;

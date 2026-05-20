@@ -72,4 +72,4 @@ const PORT = process.env.PORT || 8080;
   } catch (error) {
     console.error('Erro ao conectar no banco:', error);
   }
-})();z
+})();
